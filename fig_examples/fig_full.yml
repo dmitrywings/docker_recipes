@@ -1,0 +1,69 @@
+front:
+  build: images/nginx
+  ports:
+    - "80:80"
+    - "9000:9000"
+  links:
+    - mysql:db
+    - memcached:cache
+  volumes:
+    - www:/var/www
+    - sites:/etc/nginx/sites-enabled
+
+web:
+  build: .
+  ports:
+    - "4040:4040"
+    - "4041:4041"
+  expose:
+    - "4040"
+    - "4041"
+  environment:
+    NODE_ENV: sandbox
+    PORT: 4040
+    ES_URL: http://192.168.50.4:9200
+    MONGODB_URL: 192.168.50.4
+    MONGODB_PORT: 27017
+  command: /usr/bin/supervisord
+  volumes:
+     - /src:/data
+
+
+db:
+  image: tutum/postgresql
+  ports:
+    - "5432:5432"
+  environment:
+    POSTGRES_PASS: password
+
+couch:
+  image: tutum/couchdb
+  ports:
+      - "5984:5984"
+
+mongo:
+  image: dockerfile/mongodb
+  ports:
+      - "27017:27017"
+
+memcached:
+  image: tutum/memcached
+  ports:
+    - "11211:11211"
+  environment:
+    MEMCACHED_PASS: password
+
+redis:
+  image: tutum/redis
+  ports:
+    - "6379:6379"
+  environment:
+    REDIS_PASS: password
+
+elasticsearch:
+  image: tutum/elasticsearch
+  ports:
+    - "9200:9200"
+  environment:
+    ELASTICSEARCH_USER: admin
+    ELASTICSEARCH_PASS: password

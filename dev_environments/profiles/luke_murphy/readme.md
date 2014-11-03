@@ -1,0 +1,3 @@
+Good article
+
+https://www.codementor.io/linux-tutorial/configure-linux-toolset-zsh-tmux-vim
